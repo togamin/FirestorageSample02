@@ -43,10 +43,5 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>To Pick Up Image</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 </dict>
 </plist>

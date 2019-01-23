@@ -17,6 +17,8 @@
 		B7AC51AD21F80D5800F8F0B5 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC51AC21F80D5800F8F0B5 /* ImageViewController.swift */; };
 		B7AC51AF21F80D8100F8F0B5 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC51AE21F80D8100F8F0B5 /* VideoViewController.swift */; };
 		B7AC51B121F8303700F8F0B5 /* togaminnnn.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B7AC51B021F8303700F8F0B5 /* togaminnnn.jpg */; };
+		B7AC51B421F84BC400F8F0B5 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AC51B221F84BC400F8F0B5 /* CollectionViewCell.swift */; };
+		B7AC51B521F84BC400F8F0B5 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7AC51B321F84BC400F8F0B5 /* CollectionViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		B7AC51AC21F80D5800F8F0B5 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		B7AC51AE21F80D8100F8F0B5 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		B7AC51B021F8303700F8F0B5 /* togaminnnn.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = togaminnnn.jpg; sourceTree = "<group>"; };
+		B7AC51B221F84BC400F8F0B5 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		B7AC51B321F84BC400F8F0B5 /* CollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
 		F183F9ADE8C7FB7CD51652E7 /* Pods-FirestorageSample02.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirestorageSample02.release.xcconfig"; path = "Pods/Target Support Files/Pods-FirestorageSample02/Pods-FirestorageSample02.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,6 +93,8 @@
 				B7AC519821F8071900F8F0B5 /* AppDelegate.swift */,
 				B7AC519A21F8071900F8F0B5 /* ViewController.swift */,
 				B7AC519C21F8071900F8F0B5 /* Main.storyboard */,
+				B7AC51B221F84BC400F8F0B5 /* CollectionViewCell.swift */,
+				B7AC51B321F84BC400F8F0B5 /* CollectionViewCell.xib */,
 				B7AC51AE21F80D8100F8F0B5 /* VideoViewController.swift */,
 				B7AC51AC21F80D5800F8F0B5 /* ImageViewController.swift */,
 				B7AC519F21F8071C00F8F0B5 /* Assets.xcassets */,
@@ -163,6 +169,7 @@
 			files = (
 				B7AC51A321F8071C00F8F0B5 /* LaunchScreen.storyboard in Resources */,
 				B7AC51AB21F8087900F8F0B5 /* GoogleService-Info.plist in Resources */,
+				B7AC51B521F84BC400F8F0B5 /* CollectionViewCell.xib in Resources */,
 				B7AC51A021F8071C00F8F0B5 /* Assets.xcassets in Resources */,
 				B7AC51B121F8303700F8F0B5 /* togaminnnn.jpg in Resources */,
 				B7AC519E21F8071900F8F0B5 /* Main.storyboard in Resources */,
@@ -259,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7AC51B421F84BC400F8F0B5 /* CollectionViewCell.swift in Sources */,
 				B7AC519B21F8071900F8F0B5 /* ViewController.swift in Sources */,
 				B7AC51AD21F80D5800F8F0B5 /* ImageViewController.swift in Sources */,
 				B7AC51AF21F80D8100F8F0B5 /* VideoViewController.swift in Sources */,
