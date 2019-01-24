@@ -8,15 +8,19 @@
 
 import UIKit
 import Firebase
+import SDWebImage
+import FirebaseUI
 
 class ImageViewController: UIViewController {
 
     @IBOutlet weak var saveImageView: UIImageView!
     let userdefaults = UserDefaults.standard
     var db:Firestore!
-    var imageURLList:[String] = []
+    var imageNameList:[String] = []
     let margin:CGFloat = 3
     @IBOutlet weak var myCollectionView: UICollectionView!
+
+    let storage = Storage.storage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +30,8 @@ class ImageViewController: UIViewController {
         
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
+        
+        readURL()
         
         myCollectionView.register(UINib(nibName:"CollectionViewCell",bundle:nil),forCellWithReuseIdentifier:"Cell")
     }
@@ -37,7 +43,7 @@ class ImageViewController: UIViewController {
     //Firestorageに画像を保存
     @IBAction func saveImage(_ sender: UIButton) {
         print("画像の保存")
-        //Firestorageに画像を保存。
+        //Firestorageに画像を保存。URLをFirestoreへ。
         saveToStrage(image:saveImageView.image!)
     }
     //Firestorageに入れた画像を読み出す
@@ -73,16 +79,19 @@ extension ImageViewController:UIImagePickerControllerDelegate,UINavigationContro
 extension ImageViewController{
     //ストレージに画像を保存
     func saveToStrage(image:UIImage){
+        //保存する画像を置く場所のPath生成
+        let name:String = fileName()
         let storage = Storage.storage()
         let storageRef = storage.reference(forURL:"gs://firestoragesample02.appspot.com")//作成したストレージのURLを入れる
-        //保存する画像を置く場所のPath生成
-        let reference = storageRef.child("images/\(fileName())")
+        let reference = storageRef.child("image/\(name)")
         //pathをFirestoreへ
-        //saveURL(data:["URL":reference])
+        saveURL(data:["fileName":name])
         //保存する画像をNSData型へ
         let data = image.pngData()
+        let meta = StorageMetadata()
+        meta.contentType = "image/jpeg"
         //storageに画像を保存
-        reference.putData(data!, metadata: nil, completion: { metaData, error in
+        reference.putData(data!, metadata: meta, completion: { metaData, error in
             print("memo:metaData",metaData)
             print("memo:error",error)
             print("memo:データの保存完了")
@@ -97,7 +106,8 @@ extension ImageViewController{
     }
     //URLをFirestoreに保存する関数
     func saveURL(data:[String:Any]){
-        db.collection("ImageURL").addDocument(data: data){err in
+        print("memo:FirestoreにURLを保存",data)
+        db.collection("ImageName").addDocument(data: data){err in
             if let err = err{
                 print("memo:失敗",err)
             }else{
@@ -107,15 +117,18 @@ extension ImageViewController{
     }
     //画像の読み込み
     func readURL(){
-        imageURLList = []
-        db.collection("ToDoList").getDocuments(){getData,err in
+        imageNameList = []
+        let storageRef = storage.reference(forURL:"gs://firestoragesample02.appspot.com")//作成したストレージのURLを入れる
+        db.collection("ImageName").getDocuments(){getData,err in
             if let err = err{
                 print("読み込み失敗",err)
             }else{
                 for document in (getData?.documents)!{
-                    print("memo:",document.data()["URL"] as! String)
+                    self.imageNameList.append(document.data()["fileName"] as! String)
                 }
             }
+            print("memo:",self.imageNameList)
+            self.myCollectionView.reloadData()
         }
     }
 }
@@ -123,13 +136,17 @@ extension ImageViewController{
 //コレクションViewに関して
 extension ImageViewController:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return imageURLList.count
+        return imageNameList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         
-        cell.myImageView.image = UIImage(named: "togaminnnn.jpg")
+        let reference = storage.reference(forURL:"gs://firestoragesample02.appspot.com").child("image/\(imageNameList[indexPath.row])")
+        
+        print("memo:reference",reference)
+        
+        cell.myImageView.sd_setImage(with: reference, placeholderImage: UIImage(named: "togaminnnn.jpg"))
         
         return cell
     }

@@ -9,4 +9,5 @@ target 'FirestorageSample02' do
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'Firebase/Storage'
+  pod 'FirebaseUI/Storage'
 end
