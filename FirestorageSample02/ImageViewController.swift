@@ -6,6 +6,25 @@
 //  Copyright © 2019 Togami Yuki. All rights reserved.
 //
 
+
+//容量の大きい画像が上手く読み込まれない問題(未解決).
+//①アップロードする際にサイズを落とす。
+//②ダウンロードする際にサイズを落とす(SDWebImageを利用して非同期で画像データを取得する方法が不明)。
+    /*
+ 
+    islandRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        if let error = error {
+        } else {
+            let image = UIImage(data: data!)
+        }
+    }
+ 
+    */
+//③サイズが大きくても読み込めるようにする。
+//⓸そもそも読み込まれない問題は画像サイズの問題ではない。
+
+
+
 import UIKit
 import Firebase
 import SDWebImage
@@ -17,16 +36,22 @@ class ImageViewController: UIViewController {
     let userdefaults = UserDefaults.standard
     var db:Firestore!
     var imageNameList:[String] = []
-    let margin:CGFloat = 3
+    let margin:CGFloat = 3//コレクションセルの幅
     @IBOutlet weak var myCollectionView: UICollectionView!
-
+    
+    //ストレージサービスへの参照を取得。
     let storage = Storage.storage()
+    //ストレージへの参照を入れるための変数。
+    var storageRef:StorageReference!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         userdefaults.register(defaults: ["imgNum": 0])
+        //ストレージサービスへの参照
         db = Firestore.firestore()
+        //ストレージへの参照
+        storageRef = storage.reference(forURL:"ストレージのURL")
         
         myCollectionView.delegate = self
         myCollectionView.dataSource = self
@@ -81,8 +106,6 @@ extension ImageViewController{
     func saveToStrage(image:UIImage){
         //保存する画像を置く場所のPath生成
         let name:String = fileName()
-        let storage = Storage.storage()
-        let storageRef = storage.reference(forURL:"gs://firestoragesample02.appspot.com")//作成したストレージのURLを入れる
         let reference = storageRef.child("image/\(name)")
         //pathをFirestoreへ
         saveURL(data:["fileName":name])
@@ -118,7 +141,6 @@ extension ImageViewController{
     //画像の読み込み
     func readURL(){
         imageNameList = []
-        let storageRef = storage.reference(forURL:"gs://firestoragesample02.appspot.com")//作成したストレージのURLを入れる
         db.collection("ImageName").getDocuments(){getData,err in
             if let err = err{
                 print("読み込み失敗",err)
@@ -126,9 +148,9 @@ extension ImageViewController{
                 for document in (getData?.documents)!{
                     self.imageNameList.append(document.data()["fileName"] as! String)
                 }
+                self.myCollectionView.reloadData()
             }
-            print("memo:",self.imageNameList)
-            self.myCollectionView.reloadData()
+            print("memo",self.imageNameList)
         }
     }
 }
@@ -142,18 +164,19 @@ extension ImageViewController:UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
         
-        let reference = storage.reference(forURL:"gs://firestoragesample02.appspot.com").child("image/\(imageNameList[indexPath.row])")
+        let reference = storageRef.child("image/\(imageNameList[indexPath.row])")
         
         print("memo:reference",reference)
         
-        cell.myImageView.sd_setImage(with: reference, placeholderImage: UIImage(named: "togaminnnn.jpg"))
+        //読み込めない場合はとがみんの写真が表示される。
+        cell.myImageView.sd_setImage(with: reference, placeholderImage:UIImage(named: "togaminnnn.jpg"))
         
         return cell
     }
     //セルのサイズ指定
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = myCollectionView.frame.width//コレクションViewの幅
-        let cellNum:CGFloat = 2
+        let cellNum:CGFloat = 1
         let cellSize = (width - margin * (cellNum + 1))/cellNum//一個あたりのサイズ
         return CGSize(width:cellSize,height:cellSize)
     }
